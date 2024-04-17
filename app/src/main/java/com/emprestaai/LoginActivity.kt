@@ -1,6 +1,8 @@
 package com.emprestaai
 
 import android.app.Activity
+import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -22,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -79,6 +80,11 @@ fun LoginPage(activity: Activity, modifier: Modifier = Modifier) {
         Row(modifier = modifier) {
             Button(onClick = {
                 Toast.makeText(activity, "Login Ok!", Toast.LENGTH_LONG).show()
+                activity?.startActivity(
+                    Intent(activity, MainActivity::class.java).setFlags(
+                        FLAG_ACTIVITY_SINGLE_TOP
+                    )
+                )
             },
                 enabled = isLoginEnabled
             ) {
