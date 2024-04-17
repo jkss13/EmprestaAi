@@ -1,5 +1,6 @@
 package com.emprestaai
 
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,15 +18,15 @@ import androidx.compose.ui.unit.sp
 
 @Preview()
 @Composable
-fun HomePage(mainActivity: MainActivity) {
+fun MapPage() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.teal_700))
+            .background(colorResource(id = R.color.purple_700))
             .wrapContentSize(Alignment.Center)
     ) {
         Text(
-            text = "Home",
+            text = "Mapa",
             fontWeight = FontWeight.Bold,
             color = Color.White,
             modifier = Modifier.align(Alignment.CenterHorizontally),
