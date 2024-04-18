@@ -29,8 +29,9 @@ import androidx.compose.foundation.lazy.items
 
 @Preview
 @Composable
-fun ListPage(activity: Activity, modifier: Modifier = Modifier) {
-    val cityList = remember { getCities().toMutableStateList() }
+fun ListPage(activity: Activity, viewModel: MainViewModel) {
+    val cityList = viewModel.cities
+//    val cityList = remember { getCities().toMutableStateList() }
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -42,17 +43,13 @@ fun ListPage(activity: Activity, modifier: Modifier = Modifier) {
                 onClick = { Toast.makeText(activity, "Cidade clicada!", Toast.LENGTH_LONG).show()
             },
                 onClose = {
-                Toast.makeText(activity, "Cidade removida!", Toast.LENGTH_LONG).show()
+                    viewModel.remove(city)
+                    Toast.makeText(activity, "Cidade removida!", Toast.LENGTH_LONG).show()
             },
                 activity = activity
             )
         }
     }
-}
-
-data class City(val name: String, var weather: String)
-private fun getCities() = List(30) { i ->
-    City(name = "Cidade $i", weather = "Carregando clima...")
 }
 
 @Composable
