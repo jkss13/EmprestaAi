@@ -17,7 +17,7 @@ fun MainNavHost(navController: NavHostController) {
             HomePage(mainActivity = MainActivity())
         }
         composable(route = BottomNavItem.ListPage.route) {
-            ListPage()
+            ListPage(MainActivity())
         }
         composable(route = BottomNavItem.MapPage.route) {
             MapPage()
