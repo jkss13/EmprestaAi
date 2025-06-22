@@ -1,6 +1,7 @@
 package com.emprestaai
 
 import android.app.Activity
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -84,6 +85,39 @@ fun EmailField(value: String, onValueChange: (String) -> Unit) {
         label = {
             Text(
                 text = "Email",
+                color = Color.Gray.copy(alpha = 0.7f),
+                modifier = Modifier.padding(top = 4.dp)
+            )
+        },
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = Color.White,
+            unfocusedContainerColor = Color.White,
+            disabledContainerColor = Color.White,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent
+        ),
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+        shape = RoundedCornerShape(4.dp)
+    )
+
+}
+
+@Composable
+fun CPFField(value: String, onValueChange: (String) -> Unit) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = Modifier
+            .fillMaxWidth()
+            .shadow(elevation = 2.dp, shape = RoundedCornerShape(4.dp))
+            .background(Color.White, RoundedCornerShape(4.dp))
+            .padding(start = 3.dp, end= 3.dp)
+            .height(65.dp),
+        label = {
+            Text(
+                text = "CPF",
                 color = Color.Gray.copy(alpha = 0.7f),
                 modifier = Modifier.padding(top = 4.dp)
             )
@@ -226,7 +260,7 @@ fun ForgotPasswordText() {
             .padding(top = 8.dp, end = 8.dp)
             .clickable {
 //                Toast.makeText(activity, "Redirecionando para recuperação de senha", Toast.LENGTH_SHORT).show()
-                // activity?.startActivity(Intent(activity, ForgotPasswordActivity::class.java))
+                 activity?.startActivity(Intent(activity, PasswordRecoveryActivity::class.java))
             }
     )
 }
