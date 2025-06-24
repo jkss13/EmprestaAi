@@ -53,7 +53,7 @@ class RegisterActivity : ComponentActivity() {
 //                        name = "Android",
                         modifier = Modifier
                             .padding(innerPadding)
-                            .background(Color(0xFFFFD83C)) // Cor #ffd83c
+                            .background(Color(0xFFFFD83C))
                     )
                 }
             }

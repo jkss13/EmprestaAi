@@ -124,7 +124,7 @@ fun LoginPage(modifier: Modifier = Modifier) {
             Button(
                 onClick = {
                     activity?.startActivity(
-                        Intent(activity, MainActivity::class.java).setFlags(
+                        Intent(activity, HomePageActivity::class.java).setFlags(
                             FLAG_ACTIVITY_SINGLE_TOP
                         )
                     )
