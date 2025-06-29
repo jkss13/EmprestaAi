@@ -5,13 +5,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.emprestaai.ListPage
+import com.emprestaai.MainViewModel
 import com.emprestaai.MapPage
 
 @Composable
-fun MainNavHost(navController: NavHostController) {
+fun MainNavHost(navController: NavHostController,
+                viewModel: MainViewModel) {
     NavHost(navController, startDestination = BottomNavRoute.Map.route) {
-        composable(BottomNavRoute.List.route) { ListPage() }
+        composable(BottomNavRoute.List.route) { ListPage(viewModel = viewModel) }
         composable(BottomNavRoute.Map.route)  { MapPage() }
-
     }
 }

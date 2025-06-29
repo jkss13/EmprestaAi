@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -42,7 +43,7 @@ class HomePageActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
                 val showSheet = remember { mutableStateOf(false) }
-
+                val viewModel : MainViewModel by viewModels()
 
                 Scaffold(
                     modifier = Modifier
@@ -76,7 +77,8 @@ class HomePageActivity : ComponentActivity() {
                         .padding(innerPadding)
                         .fillMaxSize()
                     ) {
-                        MainNavHost(navController = navController)
+                        MainNavHost(navController = navController,
+                                    viewModel = viewModel)
 
                         if (showSheet.value) {
                             ModalBottomSheet(
@@ -85,7 +87,7 @@ class HomePageActivity : ComponentActivity() {
                                 containerColor = Color(0xFFFFD83C),
                                 modifier = Modifier.fillMaxWidth().clickable { showSheet.value = false }
                             ) {
-                                ListPage()
+                                ListPage(viewModel = viewModel)
                             }
                         }
                     }
