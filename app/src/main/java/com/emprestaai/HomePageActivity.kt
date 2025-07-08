@@ -1,9 +1,12 @@
 package com.emprestaai
 
+import android.Manifest
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,6 +35,8 @@ import androidx.navigation.compose.rememberNavController
 import com.emprestaai.ui.nav.MainNavHost
 import com.emprestaai.ui.theme.EmprestaAiTheme
 import androidx.compose.material.icons.filled.List
+import com.emprestaai.ui.nav.BottomNavBar
+import com.emprestaai.ui.nav.BottomNavItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 class HomePageActivity : ComponentActivity() {
@@ -44,6 +49,8 @@ class HomePageActivity : ComponentActivity() {
                 val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
                 val showSheet = remember { mutableStateOf(false) }
                 val viewModel : MainViewModel by viewModels()
+                val launcher = rememberLauncherForActivityResult(contract =
+                    ActivityResultContracts.RequestPermission(), onResult = {} )
 
                 Scaffold(
                     modifier = Modifier
@@ -67,6 +74,15 @@ class HomePageActivity : ComponentActivity() {
                             }
                         )
                     },
+                    bottomBar = {
+                        val items = listOf(
+                            BottomNavItem.ListButton,
+                            BottomNavItem.MapButton,
+                            )
+
+                        BottomNavBar(navController = navController, items)
+
+                    },
                     floatingActionButton = {
                         FloatingActionButton(onClick = { showSheet.value = true }, containerColor = Color.Black, shape = CircleShape) {
                             Icon(Icons.Default.List, contentDescription = "Mostrar lista", tint = Color.White)
@@ -77,6 +93,7 @@ class HomePageActivity : ComponentActivity() {
                         .padding(innerPadding)
                         .fillMaxSize()
                     ) {
+                        launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                         MainNavHost(navController = navController,
                                     viewModel = viewModel)
 
