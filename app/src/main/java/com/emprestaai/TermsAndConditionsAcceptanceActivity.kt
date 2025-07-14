@@ -129,11 +129,10 @@ fun TermsAndConditionsAcceptancePage(modifier: Modifier = Modifier) {
             Button(
                 onClick = {
                     activity?.startActivity(
-                        Intent(activity, LoginActivity::class.java).setFlags(
+                        Intent(activity, RegisterActivity::class.java).setFlags(
                             FLAG_ACTIVITY_SINGLE_TOP
                         )
                     )
-                    Toast.makeText(activity, "Cadastro realizado! Realize Login.", Toast.LENGTH_LONG).show()
                     activity?.finish()
                 },
                 modifier = Modifier

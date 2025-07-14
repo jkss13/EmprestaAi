@@ -4,11 +4,13 @@ import android.app.Activity
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,6 +43,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.emprestaai.ui.theme.EmprestaAiTheme
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class RegisterActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,6 +73,7 @@ fun RegisterPage(modifier: Modifier = Modifier) {
     var CPF by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var repeatPassword by rememberSaveable { mutableStateOf("") }
+    var termsAccepted by rememberSaveable { mutableStateOf(false) }
 
     val activity = LocalContext.current as? Activity
     Column(
@@ -114,18 +119,53 @@ fun RegisterPage(modifier: Modifier = Modifier) {
 
         Spacer(modifier = modifier.size(5.dp))
 
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            androidx.compose.material3.Checkbox(
+                checked = termsAccepted,
+                onCheckedChange = { termsAccepted = it }
+            )
+
+            Text(
+                text = "Li e aceito os Termos de Uso",
+                color = Color.Black,
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .padding(start = 8.dp)
+                    .clickable {
+                        activity?.startActivity(
+                            Intent(activity, TermsAndConditionsAcceptanceActivity::class.java).setFlags(
+                                FLAG_ACTIVITY_SINGLE_TOP
+                            )
+                        )
+                    }
+            )
+        }
+
         Row(modifier = Modifier.fillMaxWidth()) {
             Button(
                 onClick = {
-                    activity?.startActivity(
-                        Intent(activity, TermsAndConditionsAcceptanceActivity::class.java).setFlags(
-                            FLAG_ACTIVITY_SINGLE_TOP
-                        )
-                    )
-//                    Toast.makeText(activity, "Cadastro realizado!", Toast.LENGTH_LONG).show()
-                    activity?.finish()
+                    Firebase.auth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(activity!!) { task ->
+                            if (task.isSuccessful) {
+                                Toast.makeText(activity,
+                                    "Registro OK!", Toast.LENGTH_LONG).show()
+                                activity.startActivity(
+                                    Intent(activity, LoginActivity::class.java).setFlags(
+                                        FLAG_ACTIVITY_SINGLE_TOP
+                                    )
+                                )
+                            } else {
+                                Toast.makeText(activity,
+                                    "Registro FALHOU!", Toast.LENGTH_LONG).show()
+                            }
+                        }
                 },
-                enabled = name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() && repeatPassword.isNotEmpty() && password == repeatPassword,
+                enabled = name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() &&
+                          repeatPassword.isNotEmpty() && password == repeatPassword &&
+                          termsAccepted,
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 3.dp, end=3.dp)
