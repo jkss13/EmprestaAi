@@ -13,11 +13,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.maps.android.compose.GoogleMap
 
 @Composable
 fun MapPage() {
     var searchText by remember { mutableStateOf("") }
-
+    val viewModel: MainViewModel = viewModel()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -52,13 +54,9 @@ fun MapPage() {
                 .fillMaxSize()
                 .wrapContentSize(Alignment.Center)
         ) {
-            Text(
-                text = "Mapa",
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                textAlign = TextAlign.Center,
-                fontSize = 20.sp
-            )
+            GoogleMap (modifier = Modifier.fillMaxSize(), onMapClick = {
+                viewModel.addCity("Cidade@${it.latitude}:${it.longitude}", "Clima", location = it)
+            }) {}
         }
     }
 }
