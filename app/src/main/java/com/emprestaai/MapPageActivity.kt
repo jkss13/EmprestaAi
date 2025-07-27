@@ -15,6 +15,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
 
 @Composable
 fun MapPage() {
@@ -49,14 +51,17 @@ fun MapPage() {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .wrapContentSize(Alignment.Center)
-        ) {
-            GoogleMap (modifier = Modifier.fillMaxSize(), onMapClick = {
-                viewModel.addCity("Cidade@${it.latitude}:${it.longitude}", "Clima", location = it)
-            }) {}
-        }
+            GoogleMap (
+                modifier = Modifier.fillMaxSize(),
+                onMapClick = { viewModel.addCity("Cidade@${it.latitude}:${it.longitude}", "Clima", location = it) }) {
+
+                viewModel.cities.forEach {
+                    if (it.location != null) {
+                        Marker( state = MarkerState(position = it.location),
+                            title = it.name, snippet = "${it.location}")
+                    }
+                }
+            }
+
     }
 }
