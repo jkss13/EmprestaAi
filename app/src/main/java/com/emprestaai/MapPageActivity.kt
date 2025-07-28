@@ -50,7 +50,6 @@ fun MapPage() {
         )
 
         Spacer(modifier = Modifier.height(24.dp))
-
             GoogleMap (
                 modifier = Modifier.fillMaxSize(),
                 onMapClick = { viewModel.addCity("Cidade@${it.latitude}:${it.longitude}", "Clima", location = it) }) {
@@ -62,6 +61,5 @@ fun MapPage() {
                     }
                 }
             }
-
     }
 }
