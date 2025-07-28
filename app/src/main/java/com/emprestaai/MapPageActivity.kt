@@ -13,11 +13,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
 
 @Composable
 fun MapPage() {
     var searchText by remember { mutableStateOf("") }
-
+    val viewModel: MainViewModel = viewModel()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -46,19 +50,16 @@ fun MapPage() {
         )
 
         Spacer(modifier = Modifier.height(24.dp))
+            GoogleMap (
+                modifier = Modifier.fillMaxSize(),
+                onMapClick = { viewModel.addCity("Cidade@${it.latitude}:${it.longitude}", "Clima", location = it) }) {
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .wrapContentSize(Alignment.Center)
-        ) {
-            Text(
-                text = "Mapa",
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                textAlign = TextAlign.Center,
-                fontSize = 20.sp
-            )
-        }
+                viewModel.cities.forEach {
+                    if (it.location != null) {
+                        Marker( state = MarkerState(position = it.location),
+                            title = it.name, snippet = "${it.location}")
+                    }
+                }
+            }
     }
 }

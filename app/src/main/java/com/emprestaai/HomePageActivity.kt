@@ -35,8 +35,12 @@ import androidx.navigation.compose.rememberNavController
 import com.emprestaai.ui.nav.MainNavHost
 import com.emprestaai.ui.theme.EmprestaAiTheme
 import androidx.compose.material.icons.filled.List
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.emprestaai.ui.nav.BottomNavBar
 import com.emprestaai.ui.nav.BottomNavItem
+import com.emprestaai.ui.nav.BottomNavRoute
 
 @OptIn(ExperimentalMaterial3Api::class)
 class HomePageActivity : ComponentActivity() {
@@ -48,7 +52,10 @@ class HomePageActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
                 val showSheet = remember { mutableStateOf(false) }
-                val viewModel : MainViewModel by viewModels()
+                val viewModel: MainViewModel = viewModel()
+                val currentRoute = navController.currentBackStackEntryAsState()
+                val currentDestination = currentRoute.value?.destination?.route
+                val showButton = currentDestination == BottomNavRoute.List.route
                 val launcher = rememberLauncherForActivityResult(contract =
                     ActivityResultContracts.RequestPermission(), onResult = {} )
 
@@ -82,11 +89,6 @@ class HomePageActivity : ComponentActivity() {
 
                         BottomNavBar(navController = navController, items)
 
-                    },
-                    floatingActionButton = {
-                        FloatingActionButton(onClick = { showSheet.value = true }, containerColor = Color.Black, shape = CircleShape) {
-                            Icon(Icons.Default.List, contentDescription = "Mostrar lista", tint = Color.White)
-                        }
                     }
                 ) { innerPadding ->
                     Box(modifier = Modifier
