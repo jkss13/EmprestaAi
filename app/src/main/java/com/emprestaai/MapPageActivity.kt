@@ -19,9 +19,8 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 
 @Composable
-fun MapPage() {
+fun MapPage(viewModel: MainViewModel) {
     var searchText by remember { mutableStateOf("") }
-    val viewModel: MainViewModel = viewModel()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -50,16 +49,18 @@ fun MapPage() {
         )
 
         Spacer(modifier = Modifier.height(24.dp))
-            GoogleMap (
-                modifier = Modifier.fillMaxSize(),
-                onMapClick = { viewModel.addCity("Cidade@${it.latitude}:${it.longitude}", "Clima", location = it) }) {
-
-                viewModel.cities.forEach {
-                    if (it.location != null) {
-                        Marker( state = MarkerState(position = it.location),
-                            title = it.name, snippet = "${it.location}")
-                    }
-                }
-            }
+        GoogleMap(
+            modifier = Modifier.fillMaxSize()
+        )
+//                onMapClick = { viewModel.addCity("Cidade@${it.latitude}:${it.longitude}", "Clima", location = it) }) {
+//
+//                viewModel.cities.forEach {
+//                    if (it.location != null) {
+//                        Marker( state = MarkerState(position = it.location),
+//                            title = it.name, snippet = "${it.location}")
+//                    }
+//                }
+//            }
+//    }
     }
 }

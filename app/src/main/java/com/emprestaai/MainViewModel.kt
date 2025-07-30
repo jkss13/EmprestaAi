@@ -1,71 +1,76 @@
 package com.emprestaai
 
-import androidx.compose.runtime.toMutableStateList
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.emprestaai.db.fb.FBDatabase
+import com.emprestaai.db.fb.FBItem
+import com.emprestaai.db.fb.FBUser
 import com.emprestaai.model.City
 import com.emprestaai.model.Item
-import com.google.android.gms.maps.model.LatLng
-import kotlin.random.Random
+import com.emprestaai.model.User
 
-class MainViewModel : ViewModel() {
-    private val _items = getMockItems().toMutableStateList()
-    val items
+class MainViewModel(private val db: FBDatabase) : ViewModel(),
+    FBDatabase.Listener {
+
+    private val _user = MutableLiveData<User?>(null)
+    val user: LiveData<User?> get() = _user
+
+    private val _items = mutableStateListOf<Item>()
+    val items: List<Item>
         get() = _items.toList()
 
+    private val _publicItems = mutableStateListOf<City>() // lista de cidades públicas (exemplo)
+    val cities: List<City>
+        get() = _publicItems.toList()
+
+    init {
+        db.setListener(this)
+    }
+
+    fun add(item: Item) {
+        val fbItem = item.toFBItem()
+        db.addItem(fbItem)
+    }
+
     fun remove(item: Item) {
-        _items.remove(item)
+        item.id?.let { db.removeItem(it) }
     }
 
-    fun add(name: String, description: String, condition: String, location: LatLng) {
-        _items.add(
-            Item(
-                name = name,
-                description = description,
-                condition = condition,
-                location = location
-            )
-        )
+    override fun onUserLoaded(user: FBUser) {
+        try {
+            println("DEBUG: FBUser received - $user")
+            val convertedUser = user.toUser()
+            println("DEBUG: Converted user - $convertedUser")
+            _user.value = convertedUser
+        } catch (e: Exception) {
+            println("DEBUG: Error in onUserLoaded - ${e.message}")
+            e.printStackTrace()
+        }
     }
 
-    private val _cities = getCities().toMutableStateList()
-
-    val cities
-        get() = _cities.toList()
-
-    fun removeCity(city: City) {
-        _cities.remove(city)
+    override fun onUserSignOut() {
+        _user.value = null
+        _items.clear()
+        _publicItems.clear()
     }
 
-    fun addCity(name: String, weather: String, location: LatLng) {
-        _cities.add(
-            City(
-                name = name,
-                weather = weather,
-                location = location
-            )
-        )
+
+    override fun onItemAdded(item: FBItem) {
+        _items.add(item.toItem())
     }
-}
 
-private fun getCities() = List(20) { i ->
-    City(name = "Cidade $i", weather = "Carregando clima...")
-}
-private fun getMockItems(): List<Item> {
-    val sampleNames = listOf("Cadeira de Escritório", "Furadeira de Impacto", "Monitor Gamer 27\"", "Violão de Nylon", "Mochila de Camping 70L", "Livro de Kotlin Avançado")
-    val sampleConditions = listOf("Like New", "Good", "Fair", "Used")
-    val sampleDescriptions = listOf("Pouco usado, em perfeito estado.", "Funcional, com algumas marcas de uso.", "Ideal para projetos rápidos.", "Ótimo para estudantes.")
+    override fun onItemUpdated(item: FBItem) {
+        val updated = item.toItem()
+        val index = _items.indexOfFirst { it.id == updated.id }
+        if (index != -1) {
+            _items[index] = updated
+        }
+    }
 
-    val recifeLatLng = LatLng(-8.0578, -34.8829)
-
-    return List(15) { i ->
-        Item(
-            name = "${sampleNames.random()} #${i + 1}",
-            description = sampleDescriptions.random(),
-            condition = sampleConditions.random(),
-            location = LatLng(
-                recifeLatLng.latitude + Random.nextDouble(-0.05, 0.05),
-                recifeLatLng.longitude + Random.nextDouble(-0.05, 0.05)
-            )
-        )
+    override fun onItemRemoved(item: FBItem) {
+        _items.removeIf { it.id == item.id }
     }
 }

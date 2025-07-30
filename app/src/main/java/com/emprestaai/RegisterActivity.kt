@@ -42,9 +42,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.emprestaai.db.fb.FBDatabase
+import com.emprestaai.db.fb.toFBUser
+import com.emprestaai.model.User
 import com.emprestaai.ui.theme.EmprestaAiTheme
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 class RegisterActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -152,6 +155,7 @@ fun RegisterPage(modifier: Modifier = Modifier) {
                             if (task.isSuccessful) {
                                 Toast.makeText(activity,
                                     "Registro OK!", Toast.LENGTH_LONG).show()
+                                FBDatabase().register(User(name, email).toFBUser())
                                 activity.startActivity(
                                     Intent(activity, LoginActivity::class.java).setFlags(
                                         FLAG_ACTIVITY_SINGLE_TOP
