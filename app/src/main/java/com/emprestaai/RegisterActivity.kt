@@ -155,7 +155,7 @@ fun RegisterPage(modifier: Modifier = Modifier) {
                             if (task.isSuccessful) {
                                 Toast.makeText(activity,
                                     "Registro OK!", Toast.LENGTH_LONG).show()
-                                FBDatabase().register(User(name, email).toFBUser())
+                                FBDatabase().register(User(name = name,email = email).toFBUser())
                                 activity.startActivity(
                                     Intent(activity, LoginActivity::class.java).setFlags(
                                         FLAG_ACTIVITY_SINGLE_TOP

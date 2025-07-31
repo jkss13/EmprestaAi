@@ -78,20 +78,16 @@ class FBDatabase {
             .add(itemWithOwner)
     }
 
-    fun removeItem(itemId: String) {
-        val currentUser = auth.currentUser
-            ?: throw RuntimeException("User not logged in!")
+    fun removeItem(item: FBItem) {
+        if (auth.currentUser == null)
+            throw RuntimeException("User not logged in!")
 
-        val itemRef = db.collection("items").document(itemId)
+        if (item.name == null || item.name!!.isEmpty())
+            throw RuntimeException("Item with null or empty name!")
 
-        itemRef.get().addOnSuccessListener { doc ->
-            val item = doc.toObject(FBItem::class.java)
-            if (item?.ownerId == currentUser.uid) {
-                doc.reference.delete()
-            } else {
-                throw RuntimeException("You do not have permission to delete this item")
-            }
-        }
+        val uid = auth.currentUser!!.uid
+        db.collection("items").document(uid).collection("cities")
+            .document(item.name!!).delete()
     }
 
     fun getUserItems(onResult: (List<FBItem>) -> Unit) {
