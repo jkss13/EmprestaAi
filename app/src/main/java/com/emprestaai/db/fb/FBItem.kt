@@ -9,7 +9,7 @@ data class FBItem (
     var name: String? = null,
     var description: String? = null,
     var condition: String? = null,
-    var location: LatLng?,
+    var location: LatLng? = null,
     var ownerId: String? = null,
 
     @get:Exclude var id: String? = null

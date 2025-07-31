@@ -19,12 +19,13 @@ class MainViewModel(private val db: FBDatabase) : ViewModel(),
     val user: LiveData<User?> get() = _user
 
     private val _items = mutableStateListOf<Item>()
+
     val items: List<Item>
         get() = _items.toList()
 
-    private val _publicItems = mutableStateListOf<City>() // lista de cidades públicas (exemplo)
-    val cities: List<City>
-        get() = _publicItems.toList()
+    private val _myItems = mutableStateListOf<Item>()
+
+    val myItems: List<Item> get() = _myItems
 
     init {
         db.setListener(this)
@@ -36,7 +37,7 @@ class MainViewModel(private val db: FBDatabase) : ViewModel(),
     }
 
     fun remove(item: Item) {
-        item.id?.let { db.removeItem(it) }
+        item.id?.let { db.removeItem(item.toFBItem()) }
     }
 
     override fun onUserLoaded(user: FBUser) {
@@ -45,16 +46,24 @@ class MainViewModel(private val db: FBDatabase) : ViewModel(),
             val convertedUser = user.toUser()
             println("DEBUG: Converted user - $convertedUser")
             _user.value = convertedUser
+
+            getUserItems()
         } catch (e: Exception) {
             println("DEBUG: Error in onUserLoaded - ${e.message}")
             e.printStackTrace()
         }
     }
 
+    fun getUserItems() {
+        db.getUserItems { fbItems ->
+            _myItems.clear()
+            _myItems.addAll(fbItems.map { it.toItem() })
+        }
+    }
+
     override fun onUserSignOut() {
         _user.value = null
         _items.clear()
-        _publicItems.clear()
     }
 
 

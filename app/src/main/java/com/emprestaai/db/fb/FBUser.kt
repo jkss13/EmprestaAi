@@ -3,7 +3,9 @@ package com.emprestaai.db.fb
 import com.emprestaai.model.User
 
 class FBUser {
-    var name : String ? = null
+
+
+    var name : String? = null
     var email : String? = null
     fun toUser() = User(name!!, email!!)
 }
