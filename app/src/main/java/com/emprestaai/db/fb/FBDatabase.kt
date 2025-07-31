@@ -86,7 +86,7 @@ class FBDatabase {
             throw RuntimeException("Item with null or empty name!")
 
         val uid = auth.currentUser!!.uid
-        db.collection("items").document(uid).collection("cities")
+        db.collection("items").document(uid).collection("items")
             .document(item.name!!).delete()
     }
 
