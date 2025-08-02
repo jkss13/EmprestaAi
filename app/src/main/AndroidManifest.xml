@@ -38,6 +38,11 @@
             android:label="HomePageActivity"
             android:theme="@style/Theme.EmprestaAi" />
         <activity
+            android:name=".ProfileInfoActivity"
+            android:exported="false"
+            android:label="ProfileInfoActivity"
+            android:theme="@style/Theme.EmprestaAi" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="MainActivity"

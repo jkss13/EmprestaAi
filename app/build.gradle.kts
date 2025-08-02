@@ -59,5 +59,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation("androidx.navigation:navigation-compose:2.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.30.1")
+    implementation("androidx.core:core-ktx:1.10.1")
+    implementation("com.google.accompanist:accompanist-insets:0.30.1")
+    implementation("androidx.compose.foundation:foundation:1.6.0")
 
 }
